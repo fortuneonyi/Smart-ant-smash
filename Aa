@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>funny Ant Smash Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #f2f2f2;
+      font-family: sans-serif;
+    }
+    #game-area {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    .ant {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-image: url('https://i.imgur.com/K1Z0ZsN.png'); /* Use your own ant image if you want */
+      background-size: cover;
+      cursor: pointer;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-area">
+  <div id="score">Score: 0</div>
+</div>
+
+<script>
+  const gameArea = document.getElementById('game-area');
+  const scoreDisplay = document.getElementById('score');
+  let score = 0;
+
+  function createAnt() {
+    const ant = document.createElement('div');
+    ant.classList.add('ant');
+
+    // Random position
+    ant.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+    ant.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+
+    // Move animation
+    let direction = Math.random() < 0.5 ? 1 : -1;
+    let speed = Math.random() * 2 + 1;
+    let posX = parseFloat(ant.style.left);
+
+    const move = setInterval(() => {
+      posX += direction * speed;
+      if (posX < 0 || posX > window.innerWidth - 60) {
+        direction *= -1;
+      }
+      ant.style.left = posX + 'px';
+    }, 20);
+
+    // Smash event
+    ant.addEventListener('click', () => {
+      clearInterval(move);
+      ant.remove();
+      score++;
+      scoreDisplay.textContent = 'Score: ' + score;
+      createAnt(); // Spawn another
+    });
+
+    gameArea.appendChild(ant);
+  }
+
+  // Start with 5 ants
+  for (let i = 0; i < 5; i++) {
+    createAnt();
+  }
+</script>
+
+</body>
+</html>
